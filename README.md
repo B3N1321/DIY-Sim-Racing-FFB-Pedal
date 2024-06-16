@@ -3,23 +3,6 @@
 
 # DIY-Sim-Racing-FFB-Pedal
 
-# Disclaimer
-This repository documents my research progress. I wanted to understand the necessary signal processing and control theory algorithms behind such a device. 
-
-The FFB pedal is a robot and can be dangerous. Please watch [The Terminator](https://en.wikipedia.org/wiki/The_Terminator) before continuing. If not interacted with care, it may cause harm. I'm not responsible for any harm caused by this design suggestion. Use responsibly and at your own risk.
-
-# License
-Shield: [![CC BY-NC-SA 4.0][cc-by-nc-sa-shield]][cc-by-nc-sa]
-
-This work is licensed under a
-[Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License][cc-by-nc-sa].
-
-[![CC BY-NC-SA 4.0][cc-by-nc-sa-image]][cc-by-nc-sa]
-
-[cc-by-nc-sa]: http://creativecommons.org/licenses/by-nc-sa/4.0/
-[cc-by-nc-sa-image]: https://licensebuttons.net/l/by-nc-sa/4.0/88x31.png
-[cc-by-nc-sa-shield]: https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-lightgrey.svg
-
 # Features
 ## Control of pedal parameters
 To tune the pedal parameters, a SimHub plugin was developed, which communicates with the pedal over USB.
@@ -27,38 +10,13 @@ To tune the pedal parameters, a SimHub plugin was developed, which communicates 
 ## Effects
 Currently ABS, TC and RPM vibration are supported effects. The SimHub plugin communicates with the pedal and triggers game effects as parameterized.The effects and its description can be found in [wiki](https://github.com/ChrGri/DIY-Sim-Racing-FFB-Pedal/wiki/Pedal-Effects).
 
-## Servo tuning
-The used microcontroller has software to communicate with the used iSV57 servo. Therefore, it can tune the servos PID loop and read certain servo states like position, torque, power. 
-
-## Joystick data stream
-The joystick/gamepad data is provided via three redundant channels
-1) Bluetooth
-2) 0V-3.3V output analog signal. Can be read by e.g. https://gp2040-ce.info/. The pin 25 was used for analog output.
-3) vJoy gamecontroller (only available when SimHub runs, also need enable control map plugin).
 
 ## Pedals in action
 [![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/i2e1ukc1ylA/0.jpg)](https://www.youtube.com/watch?v=i2e1ukc1ylA)
 
 
-# Contributions
-A lot of awesome devs have helped this project grow. Just to name a few:
-
-- [tjfenwick](https://github.com/tjfenwick) started the project with an initial implementation.
-- [tcfshcrw](https://github.com/tcfshcrw) helped to elevate the Simhub plugin to its current form, added a ton of pedal effects, hardware and discord support, good guy and much more.
-- [MichaelJFr](https://github.com/MichaelJFr) helped with refactoring the code at the beginning of this project. Fruitful discussions let to the implementation of the control-loop strategies.
-- [Ibakha](https://github.com/Ibakha) Discord channel CEO.
-
-
-# Wiki
-Detailed descriptions of certain aspects can be found on the dedicated [Wiki page](https://github.com/ChrGri/DIY-Sim-Racing-FFB-Pedal/wiki):
-
-
-# Discord
-A [Discord](https://discord.gg/j8QhD5hCv7) server has been created to allow joint research.
-
 
 # Hardware
-## Electronics
 
 ## Control PCB
 The embedded code of this DIY FFB pedal runs on an ESP32 microcontroller. The PCB design was developed to prove the concept. It holds the ESP32, the ADC, a level shifter, and connectors. Currently, version 3 of this PCB design is used which introduced sensorless homing of the servo. The PCB design and pinout diagram can be found [here](Wiring/Esp32_V3). If you use Simucube wheelbase, you can use the D15 accessory port for input, detail was list [here](Wiring/PCB_analog_output)
@@ -104,8 +62,6 @@ It is recommended to use a Schottky diode in the positive line from the PSU to t
 | 36V/48V| Vdd+|
 | Gnd| Gnd|
 
-
-
 ## Power PCB
 Depending on the load direction, the servo will act as a generator. It will produce an additional current flow from the servo to the PSU which could trigger the over-voltage protection from the PSU and the servo. To prevent the reverse current flow to the PSU and thus prevent over-voltage protection from the PSU, a Schottky diode was added to the power line. To prevent the trigger of the over-voltage protection from the servo a large capacitor was added in the power-line.
 
@@ -128,51 +84,44 @@ A graph of the voltage fluctuations introduced by generative current flow from t
 
 Without the capacitor these fluctuations would be much higher eventually triggering the servos overvoltage protection.
 
-
-
-
-
-
-
-## Mechanical design
-Here are some examples of mechanical designs awesome DIYers have done: 
-
-| Design           |  Link |
-:------------------------- | :-------------------------
-|<img src="https://user-images.githubusercontent.com/17485523/231913569-695fcab1-f0bb-4af6-8d90-b1bfaece13bc.png" height="200">  |  [Tjfenwick's design](https://github.com/tjfenwick/DIY-Sim-Racing-Active-Pedal)|
-|<img src="https://user-images.githubusercontent.com/79850208/261399337-b313371c-9262-416d-a131-44fa269f9557.png" height="200">  |  [Bjoes design](https://github.com/Bjoes/DIY-Active-pedal-mechanical-design)|
-|<img src="https://media.printables.com/media/prints/557527/images/4471984_0fbfebf6-7b91-47dd-9602-44a6c7e8b851/thumbs/inside/1600x1200/png/screenshot-2023-08-19-150158.webp" height="200">  |  [GWiz's design](https://www.printables.com/de/model/557527-simucube-style-active-pedal/files)|
-|<img src="https://cdn.thingiverse.com/assets/14/7d/56/cd/03/large_display_9d83a9a8-2c8a-4940-b9ce-b4ae4f9674c6.jpg" height="200">  | [shf90's design](https://www.thingiverse.com/thing:6414587)|
-
-
-
-
-## BOM
-The [BOM](Design/BOM.md) refers to the pedal design which I have chosen, see [here](Design/MechanicalDesign.md).
-
 # Software
 
-## ESP32 code
+## Programing ESP32 code
 
 ### Architecture
 A Doxygen report of the sources can be found [here](https://chrgri.github.io/DIY-Sim-Racing-FFB-Pedal/Arduino/html/index.html).
 
-### Install ESP32 driver
-The drivers can be found here [here](https://www.silabs.com/developers/usb-to-uart-bridge-vcp-drivers).
+Programing ESP32
 
-### Firmware generation and flashing
-Firmware can be built and flashed via Arduino-IDE or Arduino-CLI.
+#### 1. Install the ESP32 Driver
+Visit the Silicon Labs driver download page.
+Download and install the appropriate driver for your operating system.
 
-#### Built from source (via Arduino-IDE)
-1. Install the ESP32 dependencies in Arduino-IDE, see e.g. [here](https://randomnerdtutorials.com/installing-the-esp32-board-in-arduino-ide-windows-instructions/)
-2. Install the [libraries](https://github.com/ChrGri/DIY-Sim-Racing-FFB-Pedal/tree/main/Arduino/libs)
-3. Flash the [code](Arduino/Esp32/Main), e.g. via Ardiuno-IDE to esp32.
+#### 2. Download the Source Code from GitHub
+Open the DIY Sim Racing FFB Pedal GitHub page.
+Click the Code button, then select Download ZIP.
 
-#### Built from source (via Arduino-CLI)
-1. Install the [Arduino CLI](https://github.com/arduino/arduino-cli/releases)
-2. Install the libraries `git submodule update --init --recursive`
-3. Execute the [build script](Arduino/Esp32/arduinoCliBuildScript.bat) from a local repo.
-4. Flash the binaries via e.g. web installer, see [below](#flash-prebuilt-binaries-via-webflasher).
+#### 3. Setting up the ESP32 in the Arduino IDE
+Open the Arduino IDE.
+Go to File > Preferences.
+In the Additional Boards Manager URLs field, enter the following URL:
+https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json)
+
+Go to Tools > Board > Boards Manager.
+Search for ESP32 and install the esp32 by Espressif Systems.
+
+#### 4. Installing Libraries
+Go to Sketch > Include Library > Manage Libraries.
+Install the required libraries based on the project documentation. The commonly needed libraries are:
+ESP32Servo
+ArduinoJson
+Preferences
+
+#### 5. Opening and Uploading the Code
+Open the project's .ino file in the Arduino IDE.
+Connect the ESP32 to your computer via USB.
+Select the appropriate ESP32 board and port from the Tools menu.
+Click the Upload button to compile and upload the code to the ESP32.
 
 #### Flash prebuilt binaries via web flasher
 The binaries are available [here](https://github.com/ChrGri/DIY-Sim-Racing-FFB-Pedal/releases). They can be flashed via the ESP [webflasher](https://esp.huhn.me/). 
@@ -231,7 +180,65 @@ To get a better understanding of the motion and forces, a [python](Validation/Pe
 
 <img src="Validation/PedalKinematics/pedalKinematics.png" width="300">
 
+# Disclaimer
+This repository documents my research progress. I wanted to understand the necessary signal processing and control theory algorithms behind such a device. 
 
+The FFB pedal is a robot and can be dangerous. Please watch [The Terminator](https://en.wikipedia.org/wiki/The_Terminator) before continuing. If not interacted with care, it may cause harm. I'm not responsible for any harm caused by this design suggestion. Use responsibly and at your own risk.
+
+# License
+Shield: [![CC BY-NC-SA 4.0][cc-by-nc-sa-shield]][cc-by-nc-sa]
+
+This work is licensed under a
+[Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License][cc-by-nc-sa].
+
+[![CC BY-NC-SA 4.0][cc-by-nc-sa-image]][cc-by-nc-sa]
+
+[cc-by-nc-sa]: http://creativecommons.org/licenses/by-nc-sa/4.0/
+[cc-by-nc-sa-image]: https://licensebuttons.net/l/by-nc-sa/4.0/88x31.png
+[cc-by-nc-sa-shield]: https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-lightgrey.svg
+
+# Features
+## Control of pedal parameters
+To tune the pedal parameters, a SimHub plugin was developed, which communicates with the pedal over USB.
+
+
+## Servo tuning
+The used microcontroller has software to communicate with the used iSV57 servo. Therefore, it can tune the servos PID loop and read certain servo states like position, torque, power. 
+
+## Joystick data stream
+The joystick/gamepad data is provided via three redundant channels
+1) Bluetooth
+2) 0V-3.3V output analog signal. Can be read by e.g. https://gp2040-ce.info/. The pin 25 was used for analog output.
+3) vJoy gamecontroller (only available when SimHub runs, also need enable control map plugin).
+
+# Contributions
+A lot of awesome devs have helped this project grow. Just to name a few:
+
+- [tjfenwick](https://github.com/tjfenwick) started the project with an initial implementation.
+- [tcfshcrw](https://github.com/tcfshcrw) helped to elevate the Simhub plugin to its current form, added a ton of pedal effects, hardware and discord support, good guy and much more.
+- [MichaelJFr](https://github.com/MichaelJFr) helped with refactoring the code at the beginning of this project. Fruitful discussions let to the implementation of the control-loop strategies.
+- [Ibakha](https://github.com/Ibakha) Discord channel CEO.
+
+
+# Wiki
+Detailed descriptions of certain aspects can be found on the dedicated [Wiki page](https://github.com/ChrGri/DIY-Sim-Racing-FFB-Pedal/wiki):
+
+
+# Discord
+A [Discord](https://discord.gg/j8QhD5hCv7) server has been created to allow joint research.
+
+## Mechanical design
+Here are some examples of mechanical designs awesome DIYers have done: 
+
+| Design           |  Link |
+:------------------------- | :-------------------------
+|<img src="https://user-images.githubusercontent.com/17485523/231913569-695fcab1-f0bb-4af6-8d90-b1bfaece13bc.png" height="200">  |  [Tjfenwick's design](https://github.com/tjfenwick/DIY-Sim-Racing-Active-Pedal)|
+|<img src="https://user-images.githubusercontent.com/79850208/261399337-b313371c-9262-416d-a131-44fa269f9557.png" height="200">  |  [Bjoes design](https://github.com/Bjoes/DIY-Active-pedal-mechanical-design)|
+|<img src="https://media.printables.com/media/prints/557527/images/4471984_0fbfebf6-7b91-47dd-9602-44a6c7e8b851/thumbs/inside/1600x1200/png/screenshot-2023-08-19-150158.webp" height="200">  |  [GWiz's design](https://www.printables.com/de/model/557527-simucube-style-active-pedal/files)|
+|<img src="https://cdn.thingiverse.com/assets/14/7d/56/cd/03/large_display_9d83a9a8-2c8a-4940-b9ce-b4ae4f9674c6.jpg" height="200">  | [shf90's design](https://www.thingiverse.com/thing:6414587)|
+
+## BOM
+The [BOM](Design/BOM.md) refers to the pedal design which I have chosen, see [here](Design/MechanicalDesign.md).
 
 # Todo
 
