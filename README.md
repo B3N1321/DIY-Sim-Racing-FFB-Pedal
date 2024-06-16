@@ -13,13 +13,12 @@ Currently ABS, TC and RPM vibration are supported effects. The SimHub plugin com
 
 ## Pedals in action
 [![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/i2e1ukc1ylA/0.jpg)](https://www.youtube.com/watch?v=i2e1ukc1ylA)
-
+# • STEP 1
 ## Programing ESP32 code
 
-### Architecture
+#### Architecture
 A Doxygen report of the sources can be found [here](https://chrgri.github.io/DIY-Sim-Racing-FFB-Pedal/Arduino/html/index.html).
 
-Programing ESP32
 
 #### 1. Install the ESP32 Driver
 Visit the Silicon Labs driver download page.
@@ -33,7 +32,7 @@ Click the Code button, then select Download ZIP.
 Open the Arduino IDE.
 Go to File > Preferences.
 In the Additional Boards Manager URLs field, enter the following URL:
-https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json)
+            https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json
 
 Go to Tools > Board > Boards Manager.
 Search for ESP32 and install the esp32 by Espressif Systems.
@@ -61,11 +60,24 @@ Memory address            |  File
 | 0xe000 | boot_app0.bin |
 | 0x10000 | Main.ino.bin |
 
+# • STEP 2
 
 ## iSV57T-130 servo config tuning
-The iSV57T allows parameter tuning via its RS232 interface. To tune the servo towards this application, I executed the following [steps](StepperParameterization/StepperTuning.md).
+The iSV57T allows parameter tuning via its RS232 interface. To tune the servo towards this application, parameters have been identiefied for better servo behaviour. To flash this parameterset, follow these steps:
 
-With the current [PCB](Wiring/Esp32_V3) design, the ESP can directly communicate with the iSV57T servo. Manual tuning as described before isn't necessary anymore. A description of the steps I undertook to decode the communication protocol can be found on the Disord server. Additional features such as sensorless homing and lost-step recovery were developed and integrated with the help of this communication.
+1. Order the RS232 to USB adapter cable mentioned in the BOM, if your PC does not have a native RS232 interface.
+2. Download the tuning [software](https://www.omc-stepperonline.com/download/iSV-T_software.zip).
+3. Connect the servo to your PC via RS232 interface.
+4. Open the tuning software, select the serial port of the motor and connect<br>
+![image](Images/connectionSettings_0.png)
+5. Select the configuration window<br>
+![image](Images/readParameter_0.png)
+6. Read the tuned presets, by opening the corresponding window<br>
+![image](Images/readParameter_1.png)
+7. Select the [preset](https://github.com/ChrGri/DIY-Sim-Racing-Active-Pedal/blob/main/StepperParameterization/Tuned_130.lsr)
+8. Download and save the preset on the servo thus it is automatically used on restart
+![image](Images/downloadAndSaveConfigToPedal_0.png)
+# • STEP 3
 
 ## SimHub plugin:
 The SimHub plugin was designed to communicate with the ESP to (a) modify the pedal configuration, e.g. the force vs. travel parameterization and (b) to trigger effects such as ABS oscillations.  
@@ -108,9 +120,7 @@ To get a better understanding of the motion and forces, a [python](Validation/Pe
 
 <img src="Validation/PedalKinematics/pedalKinematics.png" width="300">
 
-# Hardware
-
-## Control PCB
+## Images of PCBs
 The embedded code of this DIY FFB pedal runs on an ESP32 microcontroller. The PCB design was developed to prove the concept. It holds the ESP32, the ADC, a level shifter, and connectors. Currently, version 3 of this PCB design is used which introduced sensorless homing of the servo. The PCB design and pinout diagram can be found [here](Wiring/Esp32_V3). If you use Simucube wheelbase, you can use the D15 accessory port for input, detail was list [here](Wiring/PCB_analog_output)
 
 Here is an image of the plain PCB:
@@ -121,37 +131,6 @@ Here is an image of the assembled PCB:
 
 ### Wiring
 The PCB has three connectors with the following wiring:
-
-#### Servo motion port
-| Connector at PCB           |  Servo |
-:------------------------- | :-------------------------
-| Dir-| Dir-|
-| Dir+| Dir+|
-| Pul-| Pul-|
-| Pul+| Pul+|
-
-#### Servo debug port 
-| Connector at PCB           |  Servo |
-:------------------------- | :-------------------------
-| Gnd| Gnd|
-| Tx| Rx|
-| Rx| Tx|
-
-#### Loadcell port 
-| Connector at PCB           |  Loadcell |
-:------------------------- | :-------------------------
-| 5V| V+|
-| Gnd| V-|
-| Gnd| Shield|
-| S+| S+|
-| S-| S-|
-
-#### Servo power port 
-It is recommended to use a Schottky diode in the positive line from the PSU to the servo. The plated side faces the servo.
-| PSU           |  Servo |
-:------------------------- | :-------------------------
-| 36V/48V| Vdd+|
-| Gnd| Gnd|
 
 ## Power PCB
 Depending on the load direction, the servo will act as a generator. It will produce an additional current flow from the servo to the PSU which could trigger the over-voltage protection from the PSU and the servo. To prevent the reverse current flow to the PSU and thus prevent over-voltage protection from the PSU, a Schottky diode was added to the power line. To prevent the trigger of the over-voltage protection from the servo a large capacitor was added in the power-line.
@@ -222,17 +201,6 @@ Detailed descriptions of certain aspects can be found on the dedicated [Wiki pag
 
 # Discord
 A [Discord](https://discord.gg/j8QhD5hCv7) server has been created to allow joint research.
-
-## Mechanical design
-Here are some examples of mechanical designs awesome DIYers have done: 
-
-| Design           |  Link |
-:------------------------- | :-------------------------
-|<img src="https://user-images.githubusercontent.com/17485523/231913569-695fcab1-f0bb-4af6-8d90-b1bfaece13bc.png" height="200">  |  [Tjfenwick's design](https://github.com/tjfenwick/DIY-Sim-Racing-Active-Pedal)|
-|<img src="https://user-images.githubusercontent.com/79850208/261399337-b313371c-9262-416d-a131-44fa269f9557.png" height="200">  |  [Bjoes design](https://github.com/Bjoes/DIY-Active-pedal-mechanical-design)|
-|<img src="https://media.printables.com/media/prints/557527/images/4471984_0fbfebf6-7b91-47dd-9602-44a6c7e8b851/thumbs/inside/1600x1200/png/screenshot-2023-08-19-150158.webp" height="200">  |  [GWiz's design](https://www.printables.com/de/model/557527-simucube-style-active-pedal/files)|
-|<img src="https://cdn.thingiverse.com/assets/14/7d/56/cd/03/large_display_9d83a9a8-2c8a-4940-b9ce-b4ae4f9674c6.jpg" height="200">  | [shf90's design](https://www.thingiverse.com/thing:6414587)|
-
 
 # Todo
 
