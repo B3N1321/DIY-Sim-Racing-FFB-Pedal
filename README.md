@@ -14,78 +14,6 @@ Currently ABS, TC and RPM vibration are supported effects. The SimHub plugin com
 ## Pedals in action
 [![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/i2e1ukc1ylA/0.jpg)](https://www.youtube.com/watch?v=i2e1ukc1ylA)
 
-
-
-# Hardware
-
-## Control PCB
-The embedded code of this DIY FFB pedal runs on an ESP32 microcontroller. The PCB design was developed to prove the concept. It holds the ESP32, the ADC, a level shifter, and connectors. Currently, version 3 of this PCB design is used which introduced sensorless homing of the servo. The PCB design and pinout diagram can be found [here](Wiring/Esp32_V3). If you use Simucube wheelbase, you can use the D15 accessory port for input, detail was list [here](Wiring/PCB_analog_output)
-
-Here is an image of the plain PCB:
-![](Wiring/Esp32_V3/PCB_empty.jpeg)
-
-Here is an image of the assembled PCB:
-![](Wiring/Esp32_V3/PCB_assembled.jpg)
-
-
-### Wiring
-The PCB has three connectors with the following wiring:
-
-#### Servo motion port
-| Connector at PCB           |  Servo |
-:------------------------- | :-------------------------
-| Dir-| Dir-|
-| Dir+| Dir+|
-| Pul-| Pul-|
-| Pul+| Pul+|
-
-#### Servo debug port 
-| Connector at PCB           |  Servo |
-:------------------------- | :-------------------------
-| Gnd| Gnd|
-| Tx| Rx|
-| Rx| Tx|
-
-#### Loadcell port 
-| Connector at PCB           |  Loadcell |
-:------------------------- | :-------------------------
-| 5V| V+|
-| Gnd| V-|
-| Gnd| Shield|
-| S+| S+|
-| S-| S-|
-
-#### Servo power port 
-It is recommended to use a Schottky diode in the positive line from the PSU to the servo. The plated side faces the servo.
-| PSU           |  Servo |
-:------------------------- | :-------------------------
-| 36V/48V| Vdd+|
-| Gnd| Gnd|
-
-## Power PCB
-Depending on the load direction, the servo will act as a generator. It will produce an additional current flow from the servo to the PSU which could trigger the over-voltage protection from the PSU and the servo. To prevent the reverse current flow to the PSU and thus prevent over-voltage protection from the PSU, a Schottky diode was added to the power line. To prevent the trigger of the over-voltage protection from the servo a large capacitor was added in the power-line.
-
-| Component           |  Link |
-:------------------------- | :-------------------------
-| SR5100 Schottky diode | [Amazon.de](https://www.amazon.de/Packung-20-SR5100-Schottky-Barriere-Gleichrichterdioden-DO-201AD/dp/B079KK7QL5/ref=sr_1_3?keywords=sr+5100+diode&qid=1691820234&sr=8-3) |
-| 100V 10kF capacitor| [Amazon.de](https://www.amazon.de/dp/B07QWTMKWZ?ref_=cm_sw_r_apan_dp_ANE55Z4BEQEJHQBQSDVM&language=de-DE) |
-
-To hold the components, a [power PCB](https://github.com/ChrGri/DIY-Sim-Racing-FFB-Pedal/tree/main/Wiring/PowerPcb) was developed, which also featured a port to hold XT30 connectors. The 
-
-Here is an image of the plain PCB:
-![](Wiring/PowerPcb/front.svg)
-
-Here is an image of the assembled PCB:
-![](Wiring/PowerPcb/PCB_assembled.jpg)
-
-
-A graph of the voltage fluctuations introduced by generative current flow from the servo can be seen here:
-<img src="Images/servo_voltage_fluctuation.png" height="200">
-
-Without the capacitor these fluctuations would be much higher eventually triggering the servos overvoltage protection.
-
-# Software
-
 ## Programing ESP32 code
 
 ### Architecture
@@ -179,6 +107,74 @@ Check the arduino plugin scan setting, please use scan only specfiec port as bel
 To get a better understanding of the motion and forces, a [python](Validation/PedalKinematics/main.py) script for simulation of the pedal angle, the pedal angular velocity and maximum pedal force has been written. Feel free to tune the pedal geometry as needed. The simulation result for my pedal geometry looks as follows:
 
 <img src="Validation/PedalKinematics/pedalKinematics.png" width="300">
+
+# Hardware
+
+## Control PCB
+The embedded code of this DIY FFB pedal runs on an ESP32 microcontroller. The PCB design was developed to prove the concept. It holds the ESP32, the ADC, a level shifter, and connectors. Currently, version 3 of this PCB design is used which introduced sensorless homing of the servo. The PCB design and pinout diagram can be found [here](Wiring/Esp32_V3). If you use Simucube wheelbase, you can use the D15 accessory port for input, detail was list [here](Wiring/PCB_analog_output)
+
+Here is an image of the plain PCB:
+![](Wiring/Esp32_V3/PCB_empty.jpeg)
+
+Here is an image of the assembled PCB:
+![](Wiring/Esp32_V3/PCB_assembled.jpg)
+
+### Wiring
+The PCB has three connectors with the following wiring:
+
+#### Servo motion port
+| Connector at PCB           |  Servo |
+:------------------------- | :-------------------------
+| Dir-| Dir-|
+| Dir+| Dir+|
+| Pul-| Pul-|
+| Pul+| Pul+|
+
+#### Servo debug port 
+| Connector at PCB           |  Servo |
+:------------------------- | :-------------------------
+| Gnd| Gnd|
+| Tx| Rx|
+| Rx| Tx|
+
+#### Loadcell port 
+| Connector at PCB           |  Loadcell |
+:------------------------- | :-------------------------
+| 5V| V+|
+| Gnd| V-|
+| Gnd| Shield|
+| S+| S+|
+| S-| S-|
+
+#### Servo power port 
+It is recommended to use a Schottky diode in the positive line from the PSU to the servo. The plated side faces the servo.
+| PSU           |  Servo |
+:------------------------- | :-------------------------
+| 36V/48V| Vdd+|
+| Gnd| Gnd|
+
+## Power PCB
+Depending on the load direction, the servo will act as a generator. It will produce an additional current flow from the servo to the PSU which could trigger the over-voltage protection from the PSU and the servo. To prevent the reverse current flow to the PSU and thus prevent over-voltage protection from the PSU, a Schottky diode was added to the power line. To prevent the trigger of the over-voltage protection from the servo a large capacitor was added in the power-line.
+
+| Component           |  Link |
+:------------------------- | :-------------------------
+| SR5100 Schottky diode | [Amazon.de](https://www.amazon.de/Packung-20-SR5100-Schottky-Barriere-Gleichrichterdioden-DO-201AD/dp/B079KK7QL5/ref=sr_1_3?keywords=sr+5100+diode&qid=1691820234&sr=8-3) |
+| 100V 10kF capacitor| [Amazon.de](https://www.amazon.de/dp/B07QWTMKWZ?ref_=cm_sw_r_apan_dp_ANE55Z4BEQEJHQBQSDVM&language=de-DE) |
+
+To hold the components, a [power PCB](https://github.com/ChrGri/DIY-Sim-Racing-FFB-Pedal/tree/main/Wiring/PowerPcb) was developed, which also featured a port to hold XT30 connectors. The 
+
+Here is an image of the plain PCB:
+![](Wiring/PowerPcb/front.svg)
+
+Here is an image of the assembled PCB:
+![](Wiring/PowerPcb/PCB_assembled.jpg)
+
+
+A graph of the voltage fluctuations introduced by generative current flow from the servo can be seen here:
+<img src="Images/servo_voltage_fluctuation.png" height="200">
+
+Without the capacitor these fluctuations would be much higher eventually triggering the servos overvoltage protection.
+
 
 # Disclaimer
 This repository documents my research progress. I wanted to understand the necessary signal processing and control theory algorithms behind such a device. 
